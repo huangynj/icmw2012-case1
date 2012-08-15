@@ -96,9 +96,9 @@
   To maintain steady mean temperature and moisture profiles (i.e., to compensate for gradual water loss 
     due to precipitation and warming of the boundary layer due to latent heating), 
     mean temperature and moisture profiles are relaxed to the initial profiles with a height-dependent 
-    relaxation time scale $\tau = \tau_{rlx}{\rm exp}(z/z_{rlx})$, with $\tau_{rlx} = 300 s$ and $z/z_{rlx} = 200 m$
-    (i.e., temperature and moisture equations have an additional source in the form $−(\psi_i −<\psi>)/\tau_{rlx}$
-    where $\psi_i$ is the initial profile and $<\psi>$ is the horizontal mean of $\psi$ at a given height. 
+    relaxation time scale $\tau = \tau_{0}{\rm exp}(z/z_{rlx})$, with $\tau_{0} = 300 s$ and $z_{rlx} = 200 m$
+    (i.e., temperature and moisture equations have an additional source in the form $-(-<\psi> - \psi_{init})/\tau_{rlx}$
+    where $\psi_{init}$ is the initial profile and $<\psi>$ is the horizontal mean of $\psi$ at a given height. 
   Note that such a formulation does not dump small-scale perturbations of $\psi$, but simply shifts the 
     horizontal mean toward $\psi_i$. 
   Such a term mimics the effects of surface fluxes that maintain the balance in the natural case.
