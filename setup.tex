@@ -1,0 +1,244 @@
+\documentclass{article}
+\usepackage{natbib,hyperref,vmargin,amsmath,pgf}
+
+
+\title{
+  8\textsuperscript{th} International Cloud Modelling Workshop\\
+  Case 1: CCN processing by a drizzling stratocumulus
+}
+\author{
+  Organized by Wojciech Grabowski (NCAR/MMM) and Zach Lebo (NCAR/ASP)
+}
+\date{
+  version of: \today
+}
+
+\begin{document}
+
+  \maketitle
+
+  \section{Overview}
+
+  The purpose of this case is to investigate accuracy and efficiency of various 
+    approaches to simulate processing of CCN by precipitating clouds. 
+  The motivation comes from observed dramatic differences between aerosol 
+    characteristics between areas of closed and open cells within stratocumulus 
+    over subtropical eastern Pacific. 
+  The problem is important because open and closed cells have dramatically 
+    different cloud characteristics, with almost 100\% cloud cover for the closed 
+    cells and significantly lower (below 20\%) cloud cover for the open cells. 
+  CCN processing at the boundary between open and closed cells has been argued to 
+    play an important role, perhaps even control, the transition from open- 
+    to closed-cell circulations.
+
+  \section{Case description}
+
+  The specific modeling case described here is based on observations 
+    of drizzling stratocumulus. 
+  Two separate modeling approaches are considered, the prescribed-flow 
+    (kinematic model) case, and the two-dimensional (2D) dynamic airflow model, 
+    both focusing on microphysical processes within drizzling stratocumulus. 
+  Each participant is expected to use both frameworks and prepare the results 
+    using the guidelines discussed below. 
+  However, using only one of the frameworks is also acceptable.
+
+  The setup for both dynamic and kinematic cases is based on VOCALS observation 
+    of subtropical drizzling stratocumulus. 
+  Idealized profiles of the total water and liquid water potential temperature 
+    are used to specify the initial profiles for the model simulations. 
+  Initial CCN characteristics are also base on VOCALS observations. 
+  In both kinematic and dynamic model simulations, the emphasis is on the 
+    representation of CCN processing by the drizzling stratocumulus and on the 
+    gradual increase of the drizzle rate as a result of reduction of total 
+    CCN number and modification of CCN size distribution.
+
+  The initial liquid water potential temperature, $\theta_l$, and the total water 
+    mixing ratio profiles, $q_t$ are prescribed as:
+    \begin{equation*}
+      \theta_l = \begin{cases}
+        289.0 & \mbox{for~} z \le z^0_{inv}\\
+        303.0 + (z - z^0_{inv})^{1/3} & \mbox{for~} z > z^0_{inv}
+      \end{cases}
+    \end{equation*}
+    \begin{equation*}
+      q_t = \begin{cases}
+        7.5 & \mbox{for~} z \le z^0_{inv}\\
+        0.5 & \mbox{for~} z > z^0_{inv}
+      \end{cases}
+    \end{equation*}
+    where $z^0_{inv} = 1500 m$ is the initial inversion height. 
+  Note that $z^0_{inv}$ is also the depth of the kinematic model computational domain 
+    and only profiles below that height (i.e., constant $\theta_l$ and $q_t$) are used 
+    as initial profiles in the kinematic model. 
+  When decomposing the profiles into profiles of the potential temperature, water vapor 
+    and cloud water mixing ratio, the hydrostatic pressure profile has to be used assuming 
+    the surface pressure of 1015 hPa. 
+  The initial profiles represent the well-mixed stratocumulus-topped boundary layer with 
+    a cloud extending from the cloud base at approximately 950 m to the boundary-layer 
+    inversion at 1500 m.
+
+  For simplicity we assume that the aerosols are amonium sulfates with the initial dry 
+    aerosol spectrum given by two-mode lognormal aerosol size distribution following 
+    observations reported in \citet[][Figs.~15 and 16 therein]{Wood_et_al_2011} and 
+    \citet[][Table~4 therein]{Allen_et_al_2011}, but with low concentrations to initiate 
+    quickly aerosol processing. 
+  The parameters for the initial distributions for the the two modes are the total 
+    concentrations of 60 and 40 cm\textsuperscript{-3}, mean radii of 0.04 and 0.15~$\mu$m, 
+    and geometric standard deviations of 1.4 and 1.6 for the first and second mode, respectively.
+
+  \section{Kinematic Model simulations}
+
+  The kinematic model computational domain is 1500~x~1500 m\textsuperscript{2}, the gridlength 
+    is 20~m in both directions, and the grid is 75~x~75. 
+  The prescribed velocity field represents a single eddy spanning the entire extent of the 
+    computational domain and featuring the maximum vertical velocity of about 1~m~s\textsuperscript{-1}, 
+    see Fig.~\ref{fig1}. 
+  To maintain steady mean temperature and moisture profiles (i.e., to compensate for gradual water loss 
+    due to precipitation and warming of the boundary layer due to latent heating), 
+    mean temperature and moisture profiles are relaxed to the initial profiles with a height-dependent 
+    relaxation time scale $\tau = \tau_{rlx}{\rm exp}(z/z_{rlx})$, with $\tau_{rlx} = 300 s$ and $z/z_{rlx} = 200 m$
+    (i.e., temperature and moisture equations have an additional source in the form $−(\psi_i −<\psi>)/\tau_{rlx}$
+    where $\psi_i$ is the initial profile and $<\psi>$ is the horizontal mean of $\psi$ at a given height. 
+  Note that such a formulation does not dump small-scale perturbations of $\psi$, but simply shifts the 
+    horizontal mean toward $\psi_i$. 
+  Such a term mimics the effects of surface fluxes that maintain the balance in the natural case.
+
+  The initial simulations should only consider activation/coalescence scavenging, 
+    that is, the change of CCN spectrum due to drizzle should only include processes 
+    associated with CCN activation, droplet collisional growth, drizzle fallout and either 
+    below-cloud evaporation or loss when reaching the surface. 
+  Additional processes, such as, for instance, scavenging of unactivated (interstitial) 
+    CCN within the cloud (through the interaction with cloud droplets) or scavenging by 
+    falling drizzle below the cloud, may be added to compare their impact with the 
+    activation/coalescence scavenging. 
+  Some discussion of these processes is given in \citet{Flossmann_and_Wobrock_2010}, 
+    although not focusing specifically on stratocumulus.
+
+  We anticipate that a variety of schemes will be put to the test of the kinematic model. 
+  Arguably the benchmark will be provided by a two-dimensional bin scheme 
+    (droplet radius times aerosol mass). 
+  Bin model with simplified representation of CCN will be used by some. 
+  A double-moment microphysics with possibly double-moment CCN representation will serve as a 
+    computationally-efficient approach, and exploring how accurate such an approach is to represent 
+    aerosol processing is one of particular goals of this case.
+
+  The FORTRAN~77 source code linked here\footnote{\url{https://raw.github.com/slayoo/icmw2012-case1/master/kinematic_wrain.vocals.f}} 
+    can be used for the kinematic model and a new modular microphysics scheme can be readily replaced 
+    into this code by individual developers of similar routines. 
+  It has a bulk representation of the microphysics without CCN processing, 
+    and has to be adopted to a specific microphysics scheme. 
+  The code has many comments and it should be easy to modify it. 
+  This code also contains calls to NCAR-Graphics for plotting purposes. 
+  Either link to proper NCARG libraries or comment out the graphical portions of code.
+  Please email W.~Grabowski (grabow@ucar.edu) if you encounter any problems. 
+
+  Example of results with a simple 1-moment bulk scheme without considering CCN processing 
+    obtained with the code available for download is shown in Fig.~\ref{fig2}. 
+  The figure shows the quasi-steady solution from the kinematic model that is reached 
+    after a few hours (solution after one hour differs from the one showed in small details). 
+  As the figure shows, drizzle does not reach the surface in this case, but it should lead 
+    to changes in the CCN spectrum once such effects are included.
+
+  \clearpage
+
+  \section{Dynamic Model simulations}
+
+  The dynamic model simulations should include key processes affecting 
+    the dynamics of the strato-cumulus-topped boundary layer (STBL), 
+    such as the cloud-top radiative cooling and surface water and energy 
+    fluxes that drive STBL circulations. 
+  It is left to the user to select the simulations framework (i.e., 2D versus 3D, 
+    specific domain size and gridlength). 
+  Below we present a setup that we used in a 2D simulation applying bulk 
+    microphysics without CCN processing. 
+  It is suggested that such a setup is used first to provide comparison with 
+    other participants. 
+  Subsequent tests should then explore the role of dimensionality, 
+    domain size, gridlength size, etc.
+
+  For the 2D dynamic model simulation, the computational domain is taken as 
+    5~km in the horizontal (X) and 3~km in the vertical (Z).
+   Model gridlength is taken to be (50,20) m in (X,Z). 
+  The model is driven by the cloud-top radiative cooling and by the surface fluxes. 
+  The radiative cooling is treated in a simplified way based on an approach developed 
+    by \citet[][eqs. 3 and 4 in particular]{Stevens_et_al_2005}.  
+  However, the free-tropospheric cooling is excluded and the local temperature tendency
+    is derived from the divergence of the upward and downward fluxes given by
+    \begin{equation*}
+      F_{rad}(x,z,t) = F_0\,{\rm exp}(-Q(z, \infty) + F_1\,{\rm exp}(-Q(0,z)))
+    \end{equation*}
+    \begin{equation*}
+      Q(a,b) = \kappa \int\limits_a^b \rho (q_c + q_r) dz
+    \end{equation*}
+    where, with $F_0 = 113 \,W m^{-2}$, $F_1 = 22 \,W m^{-2}$, $\kappa = 85 \,m^2 kg^{-1}$ 
+    (i.e., the latter two same as in \citet{Stevens_et_al_2005}, and $\rho$ being 
+    the air density. 
+  Note that $F_0$ was increased from the value used in \citet{Stevens_et_al_2005} 
+    (70 W m\textsuperscript{-2}) per Chris Bretherton's suggestion to match 
+    observations from VOCALS flights.
+
+  We purposely exclude large-scale subsidence that controls the depth of the boundary 
+    layer to avoid numerical issues with the subsidence implementation into the model. 
+  The increase of the boundary layer height can then be used as one of the measures 
+    of the simulated entrainment rate. 
+  This is consistent with excluding the free-tropospheric cooling included in 
+    \citet{Stevens_et_al_2005} and omitted here. 
+  Surface latent and sensible heat fluxes are prescribed as 115 and 15 W m\textsuperscript{-2}, 
+    respectively. 
+  To ensure that the mean temperature and moisture profiles stay close to the initial profiles, 
+    a lower-boundary-layer relaxation similar to that used in the kinematic model is also applied 
+    in the dynamic model, but with a longer relaxation time scale, $\tau_{rlx} = 1800 s$. 
+  Finally, to initiate boundary-layer circulations from motionless horizontally-uniform initial 
+    state, random temperature and moisture perturbations within the boundary layer 
+    (i.e., beneath 1500 m height) should be added. 
+  The amplitudes of the random perturbations should be 0.1~K and 0.2~g~kg\textsuperscript{-1}
+    for the potential temperature and water vapor mixing ratio.
+
+  The dynamic model is supposed to be run for 12 hours. 
+  It is suggested that the model is run for the first hour without drizzle formation 
+    to allow spinup of boundary-layer eddies.
+
+  Otherwise, significant drizzle develops at the onset in almost motionless atmosphere 
+    and leads to rapid thinning of the cloud layer. 
+  Note that this case features initially relatively deep boundary layer and deep cloud layer. 
+  Such conditions lead to the decoupling of the boundary layer \citep[cf.][]{Jones_et_al_2011}, 
+    an aspect that might play significant role in the dynamic model simulations, in contrast 
+    to the kinematic model where the flow is prescribed. 
+  Another aspect is that the interactions between dynamics and microphysics lead to solutions 
+    with significant temporal fluctuations of mean properties, as illustrated in Fig.~\ref{fig3}. 
+  This is in contrast to the kinematic model results and may have some impact on the comparison 
+    between results using different microphysical schemes. 
+  Arguably, such fluctuations should be less pronounced in 3D models.
+
+  The emphasis of the analysis should be on the evolution of mean properties characterizing 
+    cloud and precipitation processes, such as the mean cloud depth and cloud water path, 
+    the mean cloud droplet concentration and surface precipitation rate, as well as the 
+    evolution of the CCN characteristics (mean concentration, mean radius and mass, etc). 
+  Note that possibly significant difference between kinematic and dynamic model simulations 
+    in the cloud-top entrainment, present only in the dynamic model simulations. 
+  This aspects can be one of the foci of the intercomparison between results from the two models.
+
+  \begin{figure}
+    \pgfimage[width=\textwidth]{fig1}
+    \caption{\label{fig1}
+    }
+  \end{figure}
+
+  \begin{figure}
+    \pgfimage[width=\textwidth]{fig2}
+    \caption{\label{fig2}
+    }
+  \end{figure}
+  
+  \begin{figure}
+    \pgfimage[width=\textwidth]{fig3}
+    \caption{\label{fig3}
+    }
+  \end{figure}
+  
+  \clearpage
+
+  \bibliographystyle{copernicus}
+  \bibliography{setup}
+
+\end{document}
